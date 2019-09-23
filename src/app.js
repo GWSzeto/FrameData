@@ -1,5 +1,5 @@
 import React from 'react'
-import BarChart from './barChart'
+import BarChart from './components/barChart'
 import fd from '../frameData'
 
 const App = () => {
