@@ -1,6 +1,21 @@
 import React from 'react'
+import styled from 'styled-components'
 import BarChart from './components/barChart'
 import fd from '../frameData'
+
+const PageContainer = styled.div`
+  display: grid;
+  grid:
+    ".....   .....   ....." 1fr
+    ".....  barGraph ....." 1fr
+    ".....   .....   ....." 1fr /
+      1fr     1fr      1fr;
+  min-height: 100vh;
+`
+
+const Graph = styled.div`
+  grid-area: barGraph;
+`
 
 const App = () => {
   const fairData = Object.keys(fd)
@@ -9,10 +24,14 @@ const App = () => {
     .map(characterName => ({ characterName, totalFrames: fairData[characterName].totalFrames}))
   console.log("fair data: ", fairTotalFrames)
   return (
-    <BarChart
-      data={fairTotalFrames}
-      size={[500, 500]}
-    />
+    <PageContainer>
+      <Graph>
+        <BarChart
+          data={fairTotalFrames}
+          size={[500, 500]}
+        />
+      </Graph>
+    </PageContainer>
   )
 }
 

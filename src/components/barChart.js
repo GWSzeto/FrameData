@@ -1,24 +1,14 @@
 import React, { useEffect, useRef } from 'react'
-import styled from 'styled-components'
 import { select } from 'd3-selection'
 import { scaleLinear, scaleOrdinal } from 'd3-scale'
 import { max } from 'd3-array'
 import { axisBottom, axisLeft } from 'd3-axis'
 import responsivefy from '../utility/responsivefy'
 
-const PageContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-`
-
 const BarChart = ({ data, size }) => {
   const node = useRef(null)
   const frameData = data.map(({ totalFrames }) => totalFrames - 30)
   const characterNames = data.map(({ characterName }) => characterName)
-
-
 
   const createBarChart = () => {
     const margin = {top: 0, right: 0, bottom: 100, left: 25}
@@ -26,7 +16,7 @@ const BarChart = ({ data, size }) => {
     const height = node.current.parentNode.offsetHeight - margin.top - margin.bottom
 
     const dataMax = max(frameData)
-    const xRange = characterNames.map((d, i) => i * ((700 - 25)/characterNames.length))
+    const xRange = characterNames.map((d, i) => i * (width/characterNames.length))
     const y = scaleLinear()
       .domain([dataMax, 0])
       .range([0, height])
@@ -75,7 +65,7 @@ const BarChart = ({ data, size }) => {
       .selectAll('text') // doing all these fancy stuff so the names can fit
         .style('text-anchor', 'end')
         .attr('dx', '-0.25rem')
-        .attr('dy', '0.5rem')
+        .attr('dy', '0.25rem')
         .attr('transform', 'rotate(-64)')
   }
 
@@ -84,10 +74,7 @@ const BarChart = ({ data, size }) => {
   }, [data, size])
 
   return (
-    <PageContainer>
-      <svg ref={node}>
-      </svg>
-    </PageContainer>
+    <svg ref={node}/>
   )
 }
 
