@@ -5,13 +5,13 @@ import { max } from 'd3-array'
 import { axisBottom, axisLeft } from 'd3-axis'
 import responsivefy from '../utility/responsivefy'
 
-const BarChart = ({ data, size }) => {
+const BarChart = ({ data }) => {
   const node = useRef(null)
   const frameData = data.map(({ totalFrames }) => totalFrames - 30)
   const characterNames = data.map(({ characterName }) => characterName)
 
   const createBarChart = () => {
-    const margin = {top: 0, right: 0, bottom: 100, left: 25}
+    const margin = {top: 0, right: 0, bottom: 50, left: 25}
     const width = node.current.parentNode.offsetWidth - margin.left - margin.right
     const height = node.current.parentNode.offsetHeight - margin.top - margin.bottom
 
@@ -71,7 +71,7 @@ const BarChart = ({ data, size }) => {
 
   useEffect(() => {
     createBarChart() 
-  }, [data, size])
+  }, [data])
 
   return (
     <svg ref={node}/>

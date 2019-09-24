@@ -10,14 +10,14 @@ export default svg => {
   const width = container.offsetWidth
   const height = container.offsetHeight
   const aspect = width/height
-  console.log('container dimensions: ', container.offsetWidth, container.offsetHeight)
 
   // set viewBox attribute to the initial size
   // control scaling with preserveAspectRatio
   // resize svg on inital page load
-  node.attr('viewBox', `0 0 ${width} ${height}`)
-      .attr('preserveAspectRatio', 'xMinYMid')
-      .call(resize);
+  node
+    .attr('viewBox', `0 0 ${width} ${height}`)
+    .attr('preserveAspectRatio', 'xMinYMid')
+    .call(resize);
 
   // add a listener so the chart will be resized
   // when the window resizes
@@ -36,6 +36,7 @@ export default svg => {
   // and resizes the svg to fill it
   // while maintaining a consistent aspect ratio
   function resize() {
+      console.log("its getting called with dimensions: ", container.offsetWidth, container.offsetHeight)
       const w = parseInt(container.offsetWidth);
       node.attr('width', w);
       node.attr('height', Math.round(w / aspect));

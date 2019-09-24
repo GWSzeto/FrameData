@@ -1,35 +1,38 @@
 import React from 'react'
 import styled from 'styled-components'
 import BarChart from './components/barChart'
+import GroupedBarChart from './components/groupedBarChart'
 import fd from '../frameData'
 
 const PageContainer = styled.div`
-  display: grid;
+  /* display: grid;
   grid:
-    ".....   .....   ....." 1fr
-    ".....  barGraph ....." 1fr
-    ".....   .....   ....." 1fr /
-      1fr     1fr      1fr;
+    " barGraph  ....." 50vh
+    "  .....    ....." 50vh /
+        50vw    50vw; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
 `
 
 const Graph = styled.div`
   grid-area: barGraph;
+  height: 500px;
+  width: 700px;
 `
 
 const App = () => {
-  const fairData = Object.keys(fd)
-    .reduce((acc, characterName) => ({ ...acc, [characterName]: fd[characterName].fair}), {})
-  const fairTotalFrames = Object.keys(fairData)
-    .map(characterName => ({ characterName, totalFrames: fairData[characterName].totalFrames}))
-  console.log("fair data: ", fairTotalFrames)
+  const mixedData = Object.keys(fd)
+    .map(characterName => ({ characterName, fair: fd[characterName].fair.totalFrames, bair: fd[characterName].bair.totalFrames}))
+  console.log("data in app: ", mixedData)
   return (
     <PageContainer>
       <Graph>
-        <BarChart
+        <GroupedBarChart data={mixedData} />
+        {/* <BarChart
           data={fairTotalFrames}
-          size={[500, 500]}
-        />
+        /> */}
       </Graph>
     </PageContainer>
   )
