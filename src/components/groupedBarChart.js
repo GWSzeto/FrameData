@@ -9,7 +9,7 @@ import responsivefy from '../utility/responsivefy'
 const GroupedBarChart = ({data, colours}) => {
   const node = useRef()
   const actionNames = data[0].frameData.map(({ action }) => action)
-  console.log("action names: ", actionNames)
+  console.log("action Names: ", actionNames)
 
   const createBarChart = () => {
     const margin = {top: 100, right: 0, bottom: 60, left: 25}
@@ -18,7 +18,6 @@ const GroupedBarChart = ({data, colours}) => {
     const barPadding = 0.2
     const axisTicks = {qty: 5, outerSize: 0}
     const maxValue = max(data, ({ frameData }) => max(frameData.map(({ totalFrames }) => totalFrames)))
-    console.log("max value: ", maxValue)
 
     // set up the color palette
     const colourPalette = scaleOrdinal()
@@ -50,6 +49,8 @@ const GroupedBarChart = ({data, colours}) => {
     
     // sets up the x positioning of each character name along 
     // the width of the container with transitions
+    const t = transition()
+      .duration(750)
 
     const characters = select(node.current)
       .selectAll('.character_name')
@@ -58,16 +59,13 @@ const GroupedBarChart = ({data, colours}) => {
         .attr('class', 'character_name')
         .attr('transform', d =>  `translate(${characterScale(d.character)}, 0)`)
     
-    const t = transition()
-      .duration(750)
-    
     characters
       .selectAll('rect')
       // the data here is an extension from the data from above (line 53)
       // which is why its doing a call back to destructure it
       .data(d => d.frameData) 
       .join(
-        enter => enter
+        enter => console.log('enter data: ', enter) || enter
           .append('rect')
           .style('fill', d => colourPalette(d.action))
           .attr('x', d => actionScale(d.action))
@@ -80,6 +78,18 @@ const GroupedBarChart = ({data, colours}) => {
             .attr('y', d => yScale(d.totalFrames))
             .attr('height', d => height - yScale(d.totalFrames))
           ),
+        update => console.log("update info: ", update) || update
+          .call(update => update
+            .transition(t)
+            .attr('x', d => actionScale(d.action))
+            .attr('y', d => yScale(d.totalFrames))
+            .attr('width', actionScale.bandwidth())
+            .attr('height', d => height - yScale(d.totalFrames))
+          ),
+        exit => exit
+          .transition(t)
+          .attr('y', yScale(0))
+          .attr('height', height - yScale(0))
       )
 
 
