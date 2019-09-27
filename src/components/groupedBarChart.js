@@ -65,7 +65,7 @@ const GroupedBarChart = ({data, colours}) => {
       // which is why its doing a call back to destructure it
       .data(d => d.frameData) 
       .join(
-        enter => console.log('enter data: ', enter) || enter
+        enter => enter
           .append('rect')
           .style('fill', d => colourPalette(d.action))
           .attr('x', d => actionScale(d.action))
@@ -78,7 +78,7 @@ const GroupedBarChart = ({data, colours}) => {
             .attr('y', d => yScale(d.totalFrames))
             .attr('height', d => height - yScale(d.totalFrames))
           ),
-        update => console.log("update info: ", update) || update
+        update => update
           .call(update => update
             .transition(t)
             .attr('x', d => actionScale(d.action))
@@ -110,7 +110,12 @@ const GroupedBarChart = ({data, colours}) => {
         .attr('dx', '-0.25rem')
         .attr('dy', '0.25rem')
         .attr('transform', 'rotate(-64)')
-
+    
+    select(node.current)
+      .selectAll('.x')
+      .transition()
+        .call(xAxis)
+    
     // set up the legend
     select(node.current)
       .selectAll('.legend_square')
