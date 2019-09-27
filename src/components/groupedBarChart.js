@@ -2,13 +2,14 @@ import React, { useEffect, useRef } from 'react'
 import { scaleLinear, scaleBand, scaleOrdinal } from 'd3-scale'
 import { max } from 'd3-array'
 import { select } from 'd3-selection'
+import { transition } from 'd3-transition'
 import { axisBottom, axisLeft } from 'd3-axis'
 import responsivefy from '../utility/responsivefy'
 
 const GroupedBarChart = ({data, colours}) => {
   const node = useRef()
-  const actionNames = Object.keys(data[0])
-    .filter(actionName => actionName !== 'character')
+  const actionNames = data[0].frameData.map(({ action }) => action)
+  console.log("action names: ", actionNames)
 
   const createBarChart = () => {
     const margin = {top: 100, right: 0, bottom: 60, left: 25}
@@ -16,7 +17,8 @@ const GroupedBarChart = ({data, colours}) => {
     const height = node.current.parentNode.offsetHeight - margin.top - margin.bottom
     const barPadding = 0.2
     const axisTicks = {qty: 5, outerSize: 0}
-    const maxValue = max(data, ({character, ...actions}) => max(Object.values(actions)))
+    const maxValue = max(data, ({ frameData }) => max(frameData.map(({ totalFrames }) => totalFrames)))
+    console.log("max value: ", maxValue)
 
     // set up the color palette
     const colourPalette = scaleOrdinal()
@@ -46,7 +48,9 @@ const GroupedBarChart = ({data, colours}) => {
     select(node.current)
       .call(() => responsivefy(node.current))
     
-    // sets up the x positioning of each character name along the width of the container
+    // sets up the x positioning of each character name along 
+    // the width of the container with transitions
+
     const characters = select(node.current)
       .selectAll('.character_name')
       .data(data)
@@ -54,22 +58,30 @@ const GroupedBarChart = ({data, colours}) => {
         .attr('class', 'character_name')
         .attr('transform', d =>  `translate(${characterScale(d.character)}, 0)`)
     
-    // sets ups the x positioning of each action
-    actionNames.map((actionName, index) => 
-      characters
-        .selectAll(`.bar.${actionName}`)
-        // the data here is an extension from the data from above (line 48)
-        // which is why its doing a call back to destructure it
-        .data(d => [d]) 
-        .join('rect')
-          .attr('class', `bar ${actionName}`)
-          .style('fill', colourPalette(actionName))
-          .attr('x', d => actionScale(actionName))
-          .attr('y', d => yScale(d[actionName]))
+    const t = transition()
+      .duration(750)
+    
+    characters
+      .selectAll('rect')
+      // the data here is an extension from the data from above (line 53)
+      // which is why its doing a call back to destructure it
+      .data(d => d.frameData) 
+      .join(
+        enter => enter
+          .append('rect')
+          .style('fill', d => colourPalette(d.action))
+          .attr('x', d => actionScale(d.action))
+          .attr('y', yScale(0))
           .attr('width', actionScale.bandwidth())
-          .attr('height', d => height - yScale(d[actionName]))
+          .attr('height', height - yScale(0))
           .attr('transform', `translate(${margin.left}, ${margin.top})`)
-    )
+          .call(enter => enter
+            .transition(t)
+            .attr('y', d => yScale(d.totalFrames))
+            .attr('height', d => height - yScale(d.totalFrames))
+          ),
+      )
+
 
     // set up the axes
     select(node.current)

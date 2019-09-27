@@ -24,12 +24,25 @@ const Graph = styled.div`
 const App = () => {
   const mixedData = Object.keys(fd)
     .map(character => ({ 
-      character, 
-      fair: fd[character].fair.totalFrames, 
-      uair: fd[character].uair.totalFrames, 
-      bair: fd[character].bair.totalFrames,
-      nair: fd[character].nair.totalFrames,
-      dair: fd[character].dair.totalFrames,
+      character,
+      frameData: [
+        { 
+          action: 'fair',
+          totalFrames: fd[character].fair.totalFrames,
+        },
+        {
+          action: 'uair',
+          totalFrames: fd[character].uair.totalFrames, 
+        },
+        {
+          action: 'bair',
+          totalFrames: fd[character].bair.totalFrames,
+        },
+        {
+          action: 'dair',
+          totalFrames: fd[character].dair.totalFrames,
+        }
+      ]
     }))
   const colours = ['#FFCDB2', '#FFB4A2', '#E5989B', '#B5838D', '#6D6875']
   return (
