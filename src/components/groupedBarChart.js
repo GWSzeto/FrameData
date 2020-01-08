@@ -9,7 +9,6 @@ import responsivefy from '../utility/responsivefy'
 const GroupedBarChart = ({data, colours}) => {
   const node = useRef()
   const actionNames = data[0].frameData.map(({ action }) => action)
-  console.log("action Names: ", actionNames)
 
   const createBarChart = () => {
     const margin = {top: 100, right: 0, bottom: 60, left: 25}
@@ -17,7 +16,7 @@ const GroupedBarChart = ({data, colours}) => {
     const height = node.current.parentNode.offsetHeight - margin.top - margin.bottom
     const barPadding = 0.2
     const axisTicks = {qty: 5, outerSize: 0}
-    const maxValue = max(data, ({ frameData }) => max(frameData.map(({ totalFrames }) => totalFrames)))
+		const maxValue = max(data, ({ frameData }) => max(frameData.map(({ totalFrames }) => totalFrames)))
 
     // set up the color palette
     const colourPalette = scaleOrdinal()
@@ -39,7 +38,7 @@ const GroupedBarChart = ({data, colours}) => {
       .range([height, 0])
 
     const xAxis = axisBottom(characterScale)
-      .tickSizeOuter(axisTicks.outerSize)
+      // .tickSizeOuter(axisTicks.outerSize)
     const yAxis = axisLeft(yScale)
       .ticks(axisTicks.qty)
       .tickSizeOuter(axisTicks.outerSize)
@@ -57,11 +56,11 @@ const GroupedBarChart = ({data, colours}) => {
       .data(data)
       .join('g')
         .attr('class', 'character_name')
-        .attr('transform', d =>  `translate(${characterScale(d.character)}, 0)`)
+        .attr('transform', d => `translate(${characterScale(d.character)}, 0)`)
     
     characters
       .selectAll('rect')
-      // the data here is an extension from the data from above (line 53)
+      // the data here is an extension from the data from above
       // which is why its doing a call back to destructure it
       .data(d => d.frameData) 
       .join(
@@ -76,6 +75,9 @@ const GroupedBarChart = ({data, colours}) => {
           .call(enter => enter
             .transition(t)
             .attr('y', d => yScale(d.totalFrames))
+            // so why it calculates it this way is because the y axis is flipped. So when looking
+            // at the yScale domain and range, the larger the value in the input for domain, the smaller
+            // the value will be in the output of the range
             .attr('height', d => height - yScale(d.totalFrames))
           ),
         update => update
@@ -109,12 +111,17 @@ const GroupedBarChart = ({data, colours}) => {
         .style('text-anchor', 'end')
         .attr('dx', '-0.25rem')
         .attr('dy', '0.25rem')
-        .attr('transform', 'rotate(-64)')
-    
-    select(node.current)
-      .selectAll('.x')
-      .transition()
-        .call(xAxis)
+				.attr('transform', 'rotate(-64)')
+
+		select(node.current)
+			.selectAll('.x')
+			.transition()
+			.call(xAxis)
+		
+		select(node.current)
+			.selectAll('.y')
+			.transition()
+			.call(yAxis)
     
     // set up the legend
     select(node.current)

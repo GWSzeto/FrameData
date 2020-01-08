@@ -10,6 +10,7 @@ const PageContainer = styled.div`
     "  .....    ....." 50vh /
         50vw    50vw; */
   display: flex;
+  flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
@@ -21,32 +22,35 @@ const Graph = styled.div`
   width: 1000px;
 `
 
+const mixedData = Object.keys(fd)
+  .map(character => ({ 
+    character,
+    frameData: [
+      { 
+        action: 'fair',
+        totalFrames: fd[character].fair.totalFrames,
+      },
+      {
+        action: 'uair',
+        totalFrames: fd[character].uair.totalFrames, 
+      },
+      {
+        action: 'bair',
+        totalFrames: fd[character].bair.totalFrames,
+      },
+      {
+        action: 'dair',
+        totalFrames: fd[character].dair.totalFrames,
+      }
+    ]
+  }))
+
 const App = () => {
-  const mixedData = Object.keys(fd)
-    .map(character => ({ 
-      character,
-      frameData: [
-        { 
-          action: 'fair',
-          totalFrames: fd[character].fair.totalFrames,
-        },
-        {
-          action: 'uair',
-          totalFrames: fd[character].uair.totalFrames, 
-        },
-        {
-          action: 'bair',
-          totalFrames: fd[character].bair.totalFrames,
-        },
-        {
-          action: 'dair',
-          totalFrames: fd[character].dair.totalFrames,
-        }
-      ]
-    }))
   const [data, setData] = useState(mixedData)
   const [fair, setFair] = useState(true)
+
   const colours = ['#FFCDB2', '#FFB4A2', '#E5989B', '#B5838D', '#6D6875']
+
   const addFair = () => {
     setFair(true)
     setData(mixedData)
@@ -73,6 +77,7 @@ const App = () => {
     }))
     setData(updatedData)
   }
+
   return (
     <PageContainer>
       <Graph>

@@ -1,0 +1,21 @@
+# 01/06/2020
+- Vision of what the frame data site should look like
+    - I love the search bar look where the landing page is a just a search bar in the middle that will allow users to look up anything would want
+    - Also I want to have is a search bar in the middle, with 2 tabs underneath it. First one being **Single** and the other being **Versus**
+    - At the top of the page, it will have a header bar that will have 2 tabs on the left, **players** and **characters**.
+    - At the top left, there will be a **login** button and down the line I will maybe link up with anthers ladder and have slippi games being uploaded to the profile of the user to show their stats in that
+    - First start on the character page, where each character page will have a _bar graph_ on the left and the characters name on the top right with a short description of who the character is
+    - could have one of those stat glyphs that show their heaviness, their speed, their damage output, popularity, tier ranking, etc
+    - The graphs should show the frame data of the aerial of the characters
+        - the aerial names should be along the x axis
+        - the number of frames it takes should be along the y axis
+    - For players, should have the graph on the left and the players name on the top right along with a short bio of them
+    - The graph should be a connected scatter plot graph of all their tournament placings of 2019
+        - The x axis should be the timeline
+        - The y axis should be the tournament placing
+    - Should only have these players as of right now:
+        - Armada
+        - HungryBox
+        - Leffen
+        - Mang0
+        - M2K

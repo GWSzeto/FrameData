@@ -36,7 +36,6 @@ export default svg => {
   // and resizes the svg to fill it
   // while maintaining a consistent aspect ratio
   function resize() {
-      console.log("its getting called with dimensions: ", container.offsetWidth, container.offsetHeight)
       const w = parseInt(container.offsetWidth);
       node.attr('width', w);
       node.attr('height', Math.round(w / aspect));
