@@ -1,55 +1,44 @@
 import React, { useEffect, useRef } from 'react'
 import { select } from 'd3-selection'
-import { scaleLinear, scaleOrdinal } from 'd3-scale'
+import { scaleLinear, scaleBand } from 'd3-scale'
 import { max } from 'd3-array'
 import { axisBottom, axisLeft } from 'd3-axis'
 import responsivefy from '../utility/responsivefy'
 
 const BarChart = ({ data }) => {
   const node = useRef(null)
-  const frameData = data.map(({ totalFrames }) => totalFrames - 30)
-  const characterNames = data.map(({ characterName }) => characterName)
 
   const createBarChart = () => {
-    const margin = {top: 0, right: 0, bottom: 50, left: 25}
+    const margin = {top: 100, right: 0, bottom: 60, left: 25}
     const width = node.current.parentNode.offsetWidth - margin.left - margin.right
     const height = node.current.parentNode.offsetHeight - margin.top - margin.bottom
+    const barPadding = 0.35
+    const maxValue = max(data, ({ totalFrames }) => totalFrames)
 
-    const dataMax = max(frameData)
-    const xRange = characterNames.map((d, i) => i * (width/characterNames.length))
-    const y = scaleLinear()
-      .domain([dataMax, 0])
-      .range([0, height])
-    const x = scaleOrdinal()
-      .domain(characterNames)
-      .range(xRange)
-    const xAxis = axisBottom(x)
-      .ticks(characterNames)
-    const yAxis = axisLeft(y)
-      .ticks()
-
-    select(node.current)
-      .selectAll('rect')
-      .data(data)
-      .enter()
-      .append('rect')
+    const xScale = scaleBand()
+      .domain(data.map(d => d.action))
+      .range([0, width])
+      .padding(barPadding)
+    const yScale = scaleLinear()
+      .domain([0, maxValue])
+      .range([height, 0])
+    const xAxis = axisBottom(xScale)
+    const yAxis = axisLeft(yScale)
 
     select(node.current)
+      .append('g')
+        .attr('fill', 'steelblue')
       .selectAll('rect')
       .data(data)
-      .exit()
-      .remove()
+      .join('rect')
+        .attr('x', d => xScale(d.action))
+        .attr('y', d => yScale(d.totalFrames))
+        .attr('width', xScale.bandwidth())
+        .attr('height', d => height - yScale(d.totalFrames))
+        .attr('transform', `translate(${margin.left}, 0)`)
     
     select(node.current)
-      .selectAll('rect')
-      .data(data)
-      .style('fill', '#578ED2')
-      .attr('x', (d, i) => x(d.characterName))
-      .attr('y', (d, i) => y(d.totalFrames - 30))
-      .attr('height', d => height - y(d.totalFrames - 30))
-      .attr('width', width/data.length)
-      .attr('transform', `translate(${margin.left}, 0)`) // translate 25px to make space for the y axis
-      .call(() => responsivefy(node.current))   
+      .call(() => responsivefy(node.current))
 
     select(node.current)
       .append('g')

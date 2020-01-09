@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import BarChart from './components/barChart'
 import GroupedBarChart from './components/groupedBarChart'
 import fd from '../frameData'
 
@@ -41,7 +42,11 @@ const mixedData = Object.keys(fd)
       {
         action: 'dair',
         totalFrames: fd[character].dair.totalFrames,
-      }
+      },
+      {
+        action: 'nair',
+        totalFrames: fd[character].nair.totalFrames,
+      },
     ]
   }))
 
@@ -72,16 +77,40 @@ const App = () => {
         {
           action: 'dair',
           totalFrames: fd[character].dair.totalFrames,
-        }
+        },
+        {
+          action: 'nair',
+          totalFrames: fd[character].nair.totalFrames,
+        },
       ]
     }))
     setData(updatedData)
   }
 
+  const falconData = [
+    {
+      action: 'uair',
+      totalFrames: fd.CaptainFalcon.uair.totalFrames,
+    },
+    {
+      action: 'bair',
+      totalFrames: fd.CaptainFalcon.bair.totalFrames,
+    },
+    {
+      action: 'dair',
+      totalFrames: fd.CaptainFalcon.dair.totalFrames,
+    },
+    {
+      action: 'nair',
+      totalFrames: fd.CaptainFalcon.nair.totalFrames,
+    },
+  ]
+
   return (
     <PageContainer>
       <Graph>
-        <GroupedBarChart data={data} colours={colours}/>
+        {/* <GroupedBarChart data={data} colours={colours}/> */}
+        <BarChart data={falconData}/>
       </Graph>
       <button onClick={() => fair ? removeFair() : addFair()}>{fair ? 'Remove Fair' : 'Add Fair'}</button>
     </PageContainer>

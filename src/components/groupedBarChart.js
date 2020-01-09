@@ -10,7 +10,7 @@ const GroupedBarChart = ({data, colours}) => {
   const node = useRef()
   const actionNames = data[0].frameData.map(({ action }) => action)
 
-  const createBarChart = () => {
+  const createGroupedBarChart = () => {
     const margin = {top: 100, right: 0, bottom: 60, left: 25}
     const width = node.current.parentNode.offsetWidth - margin.left - margin.right
     const height = node.current.parentNode.offsetHeight - margin.top - margin.bottom
@@ -38,7 +38,7 @@ const GroupedBarChart = ({data, colours}) => {
       .range([height, 0])
 
     const xAxis = axisBottom(characterScale)
-      // .tickSizeOuter(axisTicks.outerSize)
+      .tickSizeOuter(axisTicks.outerSize)
     const yAxis = axisLeft(yScale)
       .ticks(axisTicks.qty)
       .tickSizeOuter(axisTicks.outerSize)
@@ -151,7 +151,7 @@ const GroupedBarChart = ({data, colours}) => {
   }
 
   useEffect(() => {
-    createBarChart()
+    createGroupedBarChart()
   }, [data])
 
   return (
